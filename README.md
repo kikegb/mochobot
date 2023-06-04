@@ -4,7 +4,7 @@
 
 * [¿Qué es?](#qué-es)
 * [Requerimientos](#requerimientos)
-* [Como utilizar](#cómo-utilizar)
+* [Cómo utilizar](#cómo-utilizar)
 * [Descripción del Robot](#descripción-del-robot)
 * [Componentes Electrónicos](#componentes-electrónicos)
 * [Piezas 3D](#piezas-3d)
@@ -51,7 +51,7 @@ Mochobot ha sido diseñado con el objetivo de moverse de forma autónoma por un 
 * Micro bomba de agua con tubo
 * Cámara PC - 8 Megapixels
 * Motores DC x 3
-* Sensor ultrasonidos HC-SR04
+* Sensor ultrasonidos HC-SR04 x 2
 * Controladoras de motor L298N x 2
 * Portapilas 4 AAA x 2
 * Placa protoboard 400 puntos
