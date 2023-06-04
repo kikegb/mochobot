@@ -14,18 +14,18 @@ import random
 GPIO.setmode(GPIO.BCM)
 # Pins sensor ultrasónico 1
 TRIGGER_PIN_ULT1 = 18
-ECHO_PIN_ULT1 = 24 # en fritzing conectado a GND, supongo que deberia estar en el 24, justo el de abajo
+ECHO_PIN_ULT1 = 24
 # Pins sensor ultrasónico 2
 TRIGGER_PIN_ULT2 = 15
 ECHO_PIN_ULT2 = 25
 # Pins controladora motores 1 (Controla 2 motores)
-Contr1_In1 = 26 
+Contr1_In1 = 13 
 Contr1_In2 = 20
-Contr1_In3 = 19
+Contr1_In3 = 12
 Contr1_In4 = 16
 # Pins controladora motores 2 (Controla 1 motor)
 Contr2_In1 = 6 
-Contr2_In2 = 12
+Contr2_In2 = 19
 
 # Configuración sensores ultrasonidos
 GPIO.setup(TRIGGER_PIN_ULT1, GPIO.OUT)
@@ -36,15 +36,17 @@ GPIO.setup(ECHO_PIN_ULT2, GPIO.IN)
 # Configuración controladoras de motores 
 # In1 e In2 controlan rueda derecha trasera | In3 e In4 controlan rueda izquierda trasera | Contr2_In1 y Contr2_In2 controlan rueda delantera
 GPIO.setup(Contr1_In1,GPIO.OUT)
+motor1 = GPIO.PWM(Contr1_In1,100)
 GPIO.setup(Contr1_In2,GPIO.OUT)
 GPIO.setup(Contr1_In3,GPIO.OUT)
+motor2 = GPIO.PWM(Contr1_In3,100)
 GPIO.setup(Contr1_In4,GPIO.OUT)
 GPIO.setup(Contr2_In1,GPIO.OUT)
 GPIO.setup(Contr2_In2,GPIO.OUT)
 # Motores empiezan parados
-GPIO.setup(Contr1_In1,GPIO.LOW)
+motor1.start(0)
 GPIO.setup(Contr1_In2,GPIO.LOW)
-GPIO.setup(Contr1_In3,GPIO.LOW)
+motor2.start(0)
 GPIO.setup(Contr1_In4,GPIO.LOW)
 GPIO.setup(Contr2_In1,GPIO.LOW)
 GPIO.setup(Contr2_In2,GPIO.LOW)
@@ -56,41 +58,41 @@ de los pines de la raspberry para que el robot se mueva en una
 dirección concreta
 """
 def movDerecha():
-    GPIO.output(Contr1_In1, GPIO.HIGH)   
+    motor1.ChangeDutyCycle(50) 
     GPIO.output(Contr1_In2, GPIO.LOW)    
-    GPIO.output(Contr1_In3, GPIO.LOW)    
+    motor2.ChangeDutyCycle(50)    
     GPIO.output(Contr1_In4, GPIO.HIGH)   
     GPIO.output(Contr2_In1, GPIO.HIGH)
     GPIO.output(Contr2_In2, GPIO.HIGH)
 
 def movIzquierda():
-    GPIO.output(Contr1_In1, GPIO.LOW)   
+    motor1.ChangeDutyCycle(50)  
     GPIO.output(Contr1_In2, GPIO.HIGH)    
-    GPIO.output(Contr1_In3, GPIO.HIGH)    
+    motor2.ChangeDutyCycle(50)   
     GPIO.output(Contr1_In4, GPIO.LOW)   
     GPIO.output(Contr2_In1, GPIO.HIGH)
     GPIO.output(Contr2_In2, GPIO.HIGH)
 
 def movAtras():
-    GPIO.output(Contr1_In1, GPIO.LOW)   
+    motor1.ChangeDutyCycle(50) 
     GPIO.output(Contr1_In2, GPIO.HIGH)    
-    GPIO.output(Contr1_In3, GPIO.LOW)    
+    motor2.ChangeDutyCycle(50)  
     GPIO.output(Contr1_In4, GPIO.HIGH)   
     GPIO.output(Contr2_In1, GPIO.LOW)
     GPIO.output(Contr2_In2, GPIO.HIGH)
 
 def movDelante():
-    GPIO.output(Contr1_In1, GPIO.HIGH)   
+    motor1.ChangeDutyCycle(50) 
     GPIO.output(Contr1_In2, GPIO.LOW)    
-    GPIO.output(Contr1_In3, GPIO.HIGH)    
+    motor2.ChangeDutyCycle(50)  
     GPIO.output(Contr1_In4, GPIO.LOW)   
     GPIO.output(Contr2_In1, GPIO.HIGH)
     GPIO.output(Contr2_In2, GPIO.LOW)
 
 def movParar():
-    GPIO.setup(Contr1_In1,GPIO.LOW)
+    motor1.ChangeDutyCycle(0)
     GPIO.setup(Contr1_In2,GPIO.LOW)
-    GPIO.setup(Contr1_In3,GPIO.LOW)
+    motor2.ChangeDutyCycle(0)
     GPIO.setup(Contr1_In4,GPIO.LOW)
     GPIO.setup(Contr2_In1,GPIO.LOW)
     GPIO.setup(Contr2_In2,GPIO.LOW)
@@ -153,11 +155,11 @@ try:
         
         if d1 <= TOPE or d2 <= TOPE:
             movParar()
-            time.sleep(0.5)
+            time.sleep(1)
             movAtras()
-            time.sleep(0.5)
+            time.sleep(2)
             movAleatorio()
-            time.sleep(0.5)
+            time.sleep(2)
             movDelante()
         else:
             #if os.path.exists(rutaImagen):
@@ -166,7 +168,7 @@ try:
             #analisisManchas()
             movDelante()
         
-        time.sleep(0.25) 
+        time.sleep(0.5) 
 except KeyboardInterrupt:
     pass
 finally:
