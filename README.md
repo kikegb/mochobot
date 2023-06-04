@@ -56,7 +56,7 @@ Mochobot ha sido diseñado con el objetivo de moverse de forma autónoma por un 
 
 # Piezas 3D
 
-Las piezas 3D utilizadas pueden accederse [aqui](https://github.com/kikegb/mochobot/blob/main/3D).
+Las piezas 3D utilizadas pueden accederse [aqui](https://github.com/kikegb/mochobot/tree/main/3D).
 
 
 # Esquema de Hardware
