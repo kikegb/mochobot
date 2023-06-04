@@ -36,10 +36,10 @@ GPIO.setup(ECHO_PIN_ULT2, GPIO.IN)
 # Configuración controladoras de motores 
 # In1 e In2 controlan rueda derecha trasera | In3 e In4 controlan rueda izquierda trasera | Contr2_In1 y Contr2_In2 controlan rueda delantera
 GPIO.setup(Contr1_In1,GPIO.OUT)
-motor1 = GPIO.PWM(Contr1_In1,100)
+motor1 = GPIO.PWM(Contr1_In1,25)
 GPIO.setup(Contr1_In2,GPIO.OUT)
 GPIO.setup(Contr1_In3,GPIO.OUT)
-motor2 = GPIO.PWM(Contr1_In3,100)
+motor2 = GPIO.PWM(Contr1_In3,25)
 GPIO.setup(Contr1_In4,GPIO.OUT)
 GPIO.setup(Contr2_In1,GPIO.OUT)
 GPIO.setup(Contr2_In2,GPIO.OUT)
@@ -62,16 +62,16 @@ def movDerecha():
     GPIO.output(Contr1_In2, GPIO.LOW)    
     motor2.ChangeDutyCycle(50)    
     GPIO.output(Contr1_In4, GPIO.HIGH)   
-    GPIO.output(Contr2_In1, GPIO.HIGH)
-    GPIO.output(Contr2_In2, GPIO.HIGH)
+    GPIO.output(Contr2_In1, GPIO.LOW)
+    GPIO.output(Contr2_In2, GPIO.LOW)
 
 def movIzquierda():
     motor1.ChangeDutyCycle(50)  
     GPIO.output(Contr1_In2, GPIO.HIGH)    
     motor2.ChangeDutyCycle(50)   
     GPIO.output(Contr1_In4, GPIO.LOW)   
-    GPIO.output(Contr2_In1, GPIO.HIGH)
-    GPIO.output(Contr2_In2, GPIO.HIGH)
+    GPIO.output(Contr2_In1, GPIO.LOW)
+    GPIO.output(Contr2_In2, GPIO.LOW)
 
 def movAtras():
     motor1.ChangeDutyCycle(50) 
@@ -79,7 +79,7 @@ def movAtras():
     motor2.ChangeDutyCycle(50)  
     GPIO.output(Contr1_In4, GPIO.HIGH)   
     GPIO.output(Contr2_In1, GPIO.LOW)
-    GPIO.output(Contr2_In2, GPIO.HIGH)
+    GPIO.output(Contr2_In2, GPIO.LOW)
 
 def movDelante():
     motor1.ChangeDutyCycle(50) 
@@ -143,7 +143,7 @@ def distancia(TRIGGER_PIN, ECHO_PIN):
 #camara = picamera.PiCamera() 
 
 # Definimos la distancia a la que detener el robot antes de chocar (en cm)
-TOPE = 20
+TOPE = 30
 
 #############################################################################
 try:
@@ -155,11 +155,15 @@ try:
         
         if d1 <= TOPE or d2 <= TOPE:
             movParar()
-            time.sleep(1)
+            time.sleep(3)
             movAtras()
             time.sleep(2)
+            movParar()
+            time.sleep(3)
             movAleatorio()
             time.sleep(2)
+            movParar()
+            time.sleep(3)
             movDelante()
         else:
             #if os.path.exists(rutaImagen):
@@ -168,7 +172,7 @@ try:
             #analisisManchas()
             movDelante()
         
-        time.sleep(0.5) 
+        time.sleep(0.25) 
 except KeyboardInterrupt:
     pass
 finally:
