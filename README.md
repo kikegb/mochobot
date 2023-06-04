@@ -24,7 +24,9 @@ Mochobot es un robot de limpieza inteligente capaz de identificar manchas en dif
 
 Para la ejecución del codigo del repositorio:
 * [Python 3.9.x](https://www.python.org/)
+* [NumPy](https://numpy.org/)
 * [Rpi.GPIO](https://pypi.org/project/RPi.GPIO/)
+* [Opencv](https://opencv.org)
 
 
 # Cómo utilizar
