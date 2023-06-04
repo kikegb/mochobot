@@ -1,14 +1,14 @@
 import os
 import numpy as np
-import cv2
+#import cv2
 import time
 import RPi.GPIO as GPIO
-import picamera
+#import picamera
 import random
 
 # Definición de rutas a archivos
-rutaActual = os.path.abspath(os.path.dirname(__file__))
-rutaImagen = rutaActual + "/imagen.jpg" # Ruta a la imagen tomada del suelo 
+#rutaActual = os.path.abspath(os.path.dirname(__file__))
+#rutaImagen = rutaActual + "/imagen.jpg" # Ruta a la imagen tomada del suelo 
 
 # Configuración de los pines
 GPIO.setmode(GPIO.BCM)
@@ -138,34 +138,37 @@ def distancia(TRIGGER_PIN, ECHO_PIN):
 
 
 # Creamos instancia de la camara para poder tomar fotos posteriormente
-camara = picamera.PiCamera() 
+#camara = picamera.PiCamera() 
 
 # Definimos la distancia a la que detener el robot antes de chocar (en cm)
 TOPE = 20
 
 #############################################################################
-
+try:
 # Bucle de movimiento de mochobot
-while(True):
-    # Comprobamos a que distancia estan los objetos del robot
-    d1 = distancia(TRIGGER_PIN_ULT1, ECHO_PIN_ULT1)
-    d2 = distancia(TRIGGER_PIN_ULT2, ECHO_PIN_ULT2)
-    
-    if d1 <= TOPE or d2 <= TOPE:
-        movParar()
-        time.sleep(0.5)
-        movAtras()
-        time.sleep(0.5)
-        movAleatorio()
-        time.sleep(0.5)
-        movDelante()
-    else:
-        if os.path.exists(rutaImagen):
-            os.remove(rutaImagen)
-        camara.capture(rutaImagen)
-        #analisisManchas()
-        movDelante()
-    
-    time.sleep(0.25) 
-
-camara.close()
+    while(True):
+        # Comprobamos a que distancia estan los objetos del robot
+        d1 = distancia(TRIGGER_PIN_ULT1, ECHO_PIN_ULT1)
+        d2 = distancia(TRIGGER_PIN_ULT2, ECHO_PIN_ULT2)
+        
+        if d1 <= TOPE or d2 <= TOPE:
+            movParar()
+            time.sleep(0.5)
+            movAtras()
+            time.sleep(0.5)
+            movAleatorio()
+            time.sleep(0.5)
+            movDelante()
+        else:
+            #if os.path.exists(rutaImagen):
+            #	os.remove(rutaImagen)
+            #camara.capture(rutaImagen)
+            #analisisManchas()
+            movDelante()
+        
+        time.sleep(0.25) 
+except KeyboardInterrupt:
+    pass
+finally:
+    GPIO.cleanup()
+    #camara.close()
