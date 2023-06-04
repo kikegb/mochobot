@@ -32,7 +32,7 @@ Para la ejecución del codigo del repositorio:
     > git clone https://github.com/kikegb/mochobot.git
 
 2. Instalar las librerías requeridas:
-    > pip install -r requirements.txt
+    > pip install -r src/requirements.txt
 
 3. Ejecutar main.py.
 
