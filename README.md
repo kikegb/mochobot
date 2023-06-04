@@ -50,11 +50,12 @@ Mochobot ha sido diseñado con el objetivo de moverse de forma autónoma por un 
 * Raspberry Pi 3 B+
 * Micro bomba de agua con tubo
 * Cámara PC - 8 Megapixels
-* Motores DC x 3
-* Sensor ultrasonidos HC-SR04 x 2
-* Controladoras de motor L298N x 2
-* Portapilas 4 AAA x 2
+* 3 x Motores DC
+* 2 x Sensor ultrasonidos HC-SR04
+* 2 x Controladoras de motor L298N
+* 2 x Portapilas 4 AAA
 * Placa protoboard 400 puntos
+* Powerbank 10.000 mAh
 
 
 # Piezas 3D
@@ -74,6 +75,12 @@ Las piezas 3D utilizadas pueden accederse [aqui](https://github.com/kikegb/mocho
 
 # Imágenes
 
+<img src="figs/mochobot1.jpeg">
+
+<img src="figs/mochobot2.jpeg">
+
+<img src="figs/mochobot3.jpeg">
+
 
 # Bibliografia
 
@@ -84,7 +91,7 @@ Las piezas 3D utilizadas pueden accederse [aqui](https://github.com/kikegb/mocho
 # Autores
 
 * [Alex Navarro](https://github.com/AlecitoUAB)
-* [Evelyn Ramírez](https://github.com/1569037)
 * [Enrique Gómez](https://github.com/kikegb)
+* [Evelyn Ramírez](https://github.com/1569037)
 * [Abel Blanco](https://github.com/abprous)
 * [Jordi Vila](https://github.com/jvfjordiv)
