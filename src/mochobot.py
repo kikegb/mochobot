@@ -1,16 +1,114 @@
-from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
-import RPi.GPIO as GPIO
+import os
+import numpy as np
+import cv2
 import time
+import RPi.GPIO as GPIO
+import picamera
+import random
 
-# Config sensor de ultrasonidos
+# Definición de rutas a archivos
+rutaActual = os.path.abspath(os.path.dirname(__file__))
+rutaImagen = rutaActual + "/imagen.jpg" # Ruta a la imagen tomada del suelo 
+
+# Configuración de los pines
 GPIO.setmode(GPIO.BCM)
-TRIGGER_PIN = 18
-ECHO_PIN = 24
-GPIO.setup(TRIGGER_PIN, GPIO.OUT)
-GPIO.setup(ECHO_PIN, GPIO.IN)
+# Pins sensor ultrasónico 1
+TRIGGER_PIN_ULT1 = 18
+ECHO_PIN_ULT1 = 24 # en fritzing conectado a GND, supongo que deberia estar en el 24, justo el de abajo
+# Pins sensor ultrasónico 2
+TRIGGER_PIN_ULT2 = 15
+ECHO_PIN_ULT2 = 25
+# Pins controladora motores 1 (Controla 2 motores)
+Contr1_In1 = 26 
+Contr1_In2 = 20
+Contr1_In3 = 19
+Contr1_In4 = 16
+# Pins controladora motores 2 (Controla 1 motor)
+Contr2_In1 = 6 
+Contr2_In2 = 12
 
-# Función para medir la distancia con el sensor de ultrasonidos
-def distancia():
+# Configuración sensores ultrasonidos
+GPIO.setup(TRIGGER_PIN_ULT1, GPIO.OUT)
+GPIO.setup(ECHO_PIN_ULT1, GPIO.IN)
+GPIO.setup(TRIGGER_PIN_ULT2, GPIO.OUT)
+GPIO.setup(ECHO_PIN_ULT2, GPIO.IN)
+
+# Configuración controladoras de motores 
+# In1 e In2 controlan rueda derecha trasera | In3 e In4 controlan rueda izquierda trasera | Contr2_In1 y Contr2_In2 controlan rueda delantera
+GPIO.setup(Contr1_In1,GPIO.OUT)
+GPIO.setup(Contr1_In2,GPIO.OUT)
+GPIO.setup(Contr1_In3,GPIO.OUT)
+GPIO.setup(Contr1_In4,GPIO.OUT)
+GPIO.setup(Contr2_In1,GPIO.OUT)
+GPIO.setup(Contr2_In2,GPIO.OUT)
+# Motores empiezan parados
+GPIO.setup(Contr1_In1,GPIO.LOW)
+GPIO.setup(Contr1_In2,GPIO.LOW)
+GPIO.setup(Contr1_In3,GPIO.LOW)
+GPIO.setup(Contr1_In4,GPIO.LOW)
+GPIO.setup(Contr2_In1,GPIO.LOW)
+GPIO.setup(Contr2_In2,GPIO.LOW)
+
+# Funciones control de motores
+"""
+Funciones que aplican los cambios necesarios a los motores a través
+de los pines de la raspberry para que el robot se mueva en una 
+dirección concreta
+"""
+def movDerecha():
+    GPIO.output(Contr1_In1, GPIO.HIGH)   
+    GPIO.output(Contr1_In2, GPIO.LOW)    
+    GPIO.output(Contr1_In3, GPIO.LOW)    
+    GPIO.output(Contr1_In4, GPIO.HIGH)   
+    GPIO.output(Contr2_In1, GPIO.HIGH)
+    GPIO.output(Contr2_In2, GPIO.HIGH)
+
+def movIzquierda():
+    GPIO.output(Contr1_In1, GPIO.LOW)   
+    GPIO.output(Contr1_In2, GPIO.HIGH)    
+    GPIO.output(Contr1_In3, GPIO.HIGH)    
+    GPIO.output(Contr1_In4, GPIO.LOW)   
+    GPIO.output(Contr2_In1, GPIO.HIGH)
+    GPIO.output(Contr2_In2, GPIO.HIGH)
+
+def movAtras():
+    GPIO.output(Contr1_In1, GPIO.LOW)   
+    GPIO.output(Contr1_In2, GPIO.HIGH)    
+    GPIO.output(Contr1_In3, GPIO.LOW)    
+    GPIO.output(Contr1_In4, GPIO.HIGH)   
+    GPIO.output(Contr2_In1, GPIO.LOW)
+    GPIO.output(Contr2_In2, GPIO.HIGH)
+
+def movDelante():
+    GPIO.output(Contr1_In1, GPIO.HIGH)   
+    GPIO.output(Contr1_In2, GPIO.LOW)    
+    GPIO.output(Contr1_In3, GPIO.HIGH)    
+    GPIO.output(Contr1_In4, GPIO.LOW)   
+    GPIO.output(Contr2_In1, GPIO.HIGH)
+    GPIO.output(Contr2_In2, GPIO.LOW)
+
+def movParar():
+    GPIO.setup(Contr1_In1,GPIO.LOW)
+    GPIO.setup(Contr1_In2,GPIO.LOW)
+    GPIO.setup(Contr1_In3,GPIO.LOW)
+    GPIO.setup(Contr1_In4,GPIO.LOW)
+    GPIO.setup(Contr2_In1,GPIO.LOW)
+    GPIO.setup(Contr2_In2,GPIO.LOW)
+
+def movAleatorio():
+    movimiento = random.choice([0, 1])
+    if movimiento == 0:
+        movDerecha()
+    else:
+        movIzquierda()
+
+
+# Funciones control sensores ultrasonidos
+def distancia(TRIGGER_PIN, ECHO_PIN):
+    """
+    Función para medir la distancia con el sensor de ultrasonidos
+    devuelve la distancia en cm
+    """
     # Establecer el trigger a alto
     GPIO.output(TRIGGER_PIN, True)
 
@@ -39,28 +137,35 @@ def distancia():
     return round(distancia, 2)
 
 
-# Inicializar el controlador
-mh = Adafruit_MotorHAT(addr=0x60)
+# Creamos instancia de la camara para poder tomar fotos posteriormente
+camara = picamera.PiCamera() 
 
-# Seleccionar los motores que deseas controlar
-motor1 = mh.getMotor(1)
-motor2 = mh.getMotor(2)
+# Definimos la distancia a la que detener el robot antes de chocar (en cm)
+TOPE = 20
 
-# Definir la velocidad de los motores (0-255)
-velocidad = 150
+#############################################################################
 
-while True:
-    # Medir la distancia con el sensor de ultrasonidos
-    dist = distancia()
-
-    # Si la distancia es menor a 20cm, detener los motores
-    if dist < 20:
-        motor1.run(Adafruit_MotorHAT.RELEASE)
-        motor2.run(Adafruit_MotorHAT.RELEASE)
-
-    # Si la distancia es mayor a 20cm, mover los motores hacia adelante
+# Bucle de movimiento de mochobot
+while(True):
+    # Comprobamos a que distancia estan los objetos del robot
+    d1 = distancia(TRIGGER_PIN_ULT1, ECHO_PIN_ULT1)
+    d2 = distancia(TRIGGER_PIN_ULT2, ECHO_PIN_ULT2)
+    
+    if d1 <= TOPE or d2 <= TOPE:
+        movParar()
+        time.sleep(0.5)
+        movAtras()
+        time.sleep(0.5)
+        movAleatorio()
+        time.sleep(0.5)
+        movDelante()
     else:
-        motor1.run(Adafruit_MotorHAT.FORWARD)
-        motor1.setSpeed(velocidad)
-        motor2.run(Adafruit_MotorHAT.FORWARD)
-        motor2.setSpeed(velocidad)
+        if os.path.exists(rutaImagen):
+            os.remove(rutaImagen)
+        camara.capture(rutaImagen)
+        #analisisManchas()
+        movDelante()
+    
+    time.sleep(0.25) 
+
+camara.close()
