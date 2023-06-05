@@ -81,6 +81,8 @@ Las piezas 3D utilizadas pueden accederse [aqui](https://github.com/kikegb/mocho
 
 <img src="figs/mochobot3.jpeg">
 
+<img src="figs/mochobot4.jpeg">
+
 
 # Bibliografia
 
