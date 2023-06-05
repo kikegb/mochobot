@@ -155,15 +155,15 @@ try:
         
         if d1 <= TOPE or d2 <= TOPE:
             movParar()
-            time.sleep(3)
+            time.sleep(2)
             movAtras()
             time.sleep(2)
             movParar()
-            time.sleep(3)
-            movAleatorio()
             time.sleep(2)
+            movAleatorio()
+            time.sleep(1)
             movParar()
-            time.sleep(3)
+            time.sleep(2)
             movDelante()
         else:
             #if os.path.exists(rutaImagen):
