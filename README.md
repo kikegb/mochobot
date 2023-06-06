@@ -11,6 +11,7 @@
 * [Esquema de Hardware](#esquema-de-hardware)
 * [Arquitectura del Software](#arquitectura-del-software)
 * [Imágenes](#imágenes)
+* [Video](#video)
 * [Bibliografia](#bibliografia)
 * [Autores](#autores)
 
@@ -82,6 +83,11 @@ Las piezas 3D utilizadas pueden accederse [aqui](https://github.com/kikegb/mocho
 <img src="figs/mochobot3.jpeg">
 
 <img src="figs/mochobot4.jpeg">
+
+
+# Video
+
+[Video Mochobot](https://youtu.be/-V4FU-7DZF8)
 
 
 # Bibliografia
