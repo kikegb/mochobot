@@ -38,7 +38,7 @@ Para la ejecución del codigo del repositorio:
 2. Instalar las librerías requeridas:
     > pip install -r src/requirements.txt
 
-3. Ejecutar main.py.
+3. Ejecutar mochobot.py.
 
 
 # Descripción del Robot
